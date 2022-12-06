@@ -21,7 +21,6 @@ class BaseModel(ABC):
         self.config = config
         self.mode = mode
         self.device = config.DEVICE
-        self.devicesNum = config.N_GPUS
         self.model_name = config.MODEL_NAME
         self.log_header = config.LOG_HEADER
 
@@ -91,6 +90,7 @@ class GANModel(BaseModel):
         self.mode = mode
         self.reset_lr = reset_lr
         self.device = config.DEVICE
+        self.devicesNum = config.N_GPUS
         self.model_name = config.MODEL_NAME
         self.log_header = config.LOG_HEADER
 
