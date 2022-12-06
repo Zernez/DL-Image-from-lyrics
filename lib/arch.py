@@ -935,7 +935,6 @@ class GeneratorUNet(nn.Module):
         print ("G Unet: 3", u3.size()) 
         u4 = self.up4(u3)
         print ("G Unet: 4", u4.size()) 
-        print ("G Unet: 5", self.final(u4).size()) 
         # d1 = self.down1(u4, u3)
         # d2 = self.down2(d1, u2)
         # d3 = self.down3(d2, u1)
