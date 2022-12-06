@@ -76,8 +76,8 @@ G_refiner2_loss,D_decider2_loss,D_rr_acc,D_rf_acc,D_fr_acc,D_decider_rr_acc,D_de
         self.NG_REF_F = 64
         self.ND_DEC_F = 64
         self.OUT_CHANNELS = 1
-        self.GAN_LOSS1 = 'lsgan'    ## One of 'lsgan', 'vanilla', 'wgangp'
-        self.GAN_LOSS2 = 'lsgan'    ## One of 'lsgan', 'vanilla', 'wgangp'
+        self.GAN_LOSS1 = 'wgangp'    ## One of 'lsgan', 'vanilla', 'wgangp'
+        self.GAN_LOSS2 = 'wgangp'    ## One of 'lsgan', 'vanilla', 'wgangp'
         self.LAMBDA_L1 = 100.0
         self.NORM_LAYER = torch.nn.BatchNorm2d
         self.G_DROPOUT = 0.2
@@ -109,7 +109,7 @@ G_refiner2_loss,D_decider2_loss,D_rr_acc,D_rf_acc,D_fr_acc,D_decider_rr_acc,D_de
         self.INIT_GAIN = 0.02
 
         ## Hardware
-        # self.DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.DEVICE = torch.device('cpu')
         self.N_WORKERS = 8
         self.N_GPUS = 1

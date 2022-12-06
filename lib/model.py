@@ -571,6 +571,7 @@ class GANModel(BaseModel):
 
         ## Fake-real
         pred_fr = self.D(fake_images, real_wvs)
+
         loss_G_dist = self.G_criterion_dist(fake_images, real_first_images) * self.lambda_l1
         loss_G_GAN, _ = self.G_criterionGAN(pred_fr, target_is_real=True, prob_flip_labels=prob_flip_labels)
 
@@ -818,7 +819,8 @@ class GANModel(BaseModel):
 
             ## Update D_decider
             self.D_decider = self.set_requires_grad(self.D_decider, train_D)
-            self.D_decider.zero_grad()
+#            self.D_decider.zero_grad()
+            self.D_decider_optimizer.zero_grad()
             self.backward_D_decider(real_second_images, refined1, update=train_D, prob_flip_labels=self.prob_flip_labels)
             if train_D:
                 print ("D dec step")
@@ -831,7 +833,7 @@ class GANModel(BaseModel):
             self.D_decider = self.set_requires_grad(self.D_decider, False)      # Disable backprop for D
             self.G_refiner = self.set_requires_grad(self.G_refiner, train_G)
             self.G_refiner_optimizer.zero_grad()
-            self.D_decider.zero_grad()
+#            self.D_decider.zero_grad()
             print ("G ref step pre")
             self.backward_G_refiner(real_second_images, refined1, update=train_G, prob_flip_labels=self.prob_flip_labels)
             if train_G:
