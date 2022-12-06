@@ -209,7 +209,7 @@ class GANModel(BaseModel):
                                                                                      min_lr=lr_min_val)
 
         ## Parallelize over gpus
-        if self.device == torch.device('cuda') and torch.cuda.device_count() > 1:
+        if self.device == torch.device('cuda') and self.N_GPUS > 1:
         # if torch.cuda.device_count() > 1:
             self.G = torch.nn.DataParallel(self.G)
             self.G_refiner = torch.nn.DataParallel(self.G_refiner)
