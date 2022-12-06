@@ -112,7 +112,8 @@ G_refiner2_loss,D_decider2_loss,D_rr_acc,D_rf_acc,D_fr_acc,D_decider_rr_acc,D_de
         self.DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 #        self.DEVICE = torch.device('cpu')
         self.N_WORKERS = 8
-        self.N_GPUS = 1
+#        self.N_GPUS = 2
+        self.N_GPUS= 2
 
         ## Logging
         # self.N_PRINT_BATCH = 50
