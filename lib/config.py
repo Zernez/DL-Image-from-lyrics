@@ -82,9 +82,6 @@ G_refiner2_loss,D_decider2_loss,D_rr_acc,D_rf_acc,D_fr_acc,D_decider_rr_acc,D_de
         self.NORM_LAYER = torch.nn.BatchNorm2d
         self.G_DROPOUT = 0.2
         self.D_DROPOUT = 0.65
-        self.USE_SPECTRAL_NORM = False
-#        self.USE_SPECTRAL_NORM = True
-        self.MINIBATCH_DISCRIMINATION = False
         self.N_BLOCKS = 9
         self.PADDING_TYPE = 'reflect'   ## One of 'reflect', 'replicate', 'zero'
         self.TRAIN_D_TREND = 1    ## e.g. Train D for each 3 epoch, freeze at others

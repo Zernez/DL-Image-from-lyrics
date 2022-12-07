@@ -26,7 +26,7 @@ if __name__ == "__main__":
     model_dir = os.path.dirname(os.path.abspath(model_file))
     model_lib_dir = os.path.join(model_dir, 'lib')
     sys.path.append(model_lib_dir)
-    from model import GANModel
+    from lib.model import GANModel
     from lib.config import Config
     from lib.dataset import AlignCollate, ImageBatchSampler, TextArtDataLoader
     from lib.utils import generate_noise
