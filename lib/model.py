@@ -805,7 +805,7 @@ class GANModel(BaseModel):
             self.D_optimizer.zero_grad()
             self.backward_D(real_first_images, fake_images, real_wvs, fake_wvs, update=train_D, prob_flip_labels=self.prob_flip_labels)
             if train_D:
-                # print ("D step")
+                print ("D step")
                 self.D_optimizer.step()
 
             ## Update G
@@ -814,7 +814,7 @@ class GANModel(BaseModel):
             self.G_optimizer.zero_grad()
             self.backward_G(real_first_images, fake_images, real_wvs, update=train_G, prob_flip_labels=self.prob_flip_labels)
             if train_G:
-                # print ("G step")
+                print ("G step")
                 self.G_optimizer.step()
 #                self.G_optimizer.zero_grad()
             ## -------------------------------------
@@ -825,7 +825,7 @@ class GANModel(BaseModel):
             self.D_decider_optimizer.zero_grad()
             self.backward_D_decider(real_second_images, refined1, update=train_D, prob_flip_labels=self.prob_flip_labels)
             if train_D:
-                # print ("D dec step")
+                print ("D dec step")
                 self.D_decider_optimizer.step()
 #                self.D_decider.zero_grad()
 #                self.D_decider_optimizer.zero_grad()
@@ -836,12 +836,11 @@ class GANModel(BaseModel):
             self.G_refiner = self.set_requires_grad(self.G_refiner, train_G)
             self.G_refiner_optimizer.zero_grad()
 #            self.D_decider.zero_grad()
-            # print ("G ref step pre")
             self.backward_G_refiner(real_second_images, refined1, update=train_G, prob_flip_labels=self.prob_flip_labels)
             if train_G:
-                # print ("G ref step")
+                print ("G ref step")
                 self.G_refiner_optimizer.step()
-#                self.G_refiner_optimizer.zero_grad()
+
             ## -------------------------------------
 
             ## Update D_decider2
@@ -849,17 +848,17 @@ class GANModel(BaseModel):
             self.D_decider2_optimizer.zero_grad()
             self.backward_D_decider2(real_images, refined2, update=train_D, prob_flip_labels=self.prob_flip_labels)
             if train_D:
-                # print ("D dec 2 step")
+                print ("D dec 2 step")
                 self.D_decider2_optimizer.step()
 
-            ## Update G_refiner
+            ## Update G_refiner2
             self.D_decider2 = self.set_requires_grad(self.D_decider2, False)      # Disable backprop for D
             self.G_refiner2 = self.set_requires_grad(self.G_refiner2, train_G)
             self.G_refiner2_optimizer.zero_grad()
             # print ("D ref 2 step pre")
             self.backward_G_refiner2(real_images, refined2, update=train_G, prob_flip_labels=self.prob_flip_labels)
             if train_G:
-                # print ("D ref 2 step")
+                print ("G ref 2 step")
                 self.G_refiner2_optimizer.step()
 
         else:
