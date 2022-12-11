@@ -12,3 +12,4 @@ data/wikiart/images
 /models
 
 .ipynb_checkpoints/
+.DS_Store
