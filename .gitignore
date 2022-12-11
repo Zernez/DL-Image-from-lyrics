@@ -1,14 +1,1 @@
-__pycache__
-lib/__pycache__
-*pyc
 
-.vscode
-
-*.bak
-
-data/deviantart/images
-data/wikiart/images
-
-/models
-
-.ipynb_checkpoints/
