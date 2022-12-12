@@ -238,6 +238,15 @@ if __name__ == "__main__":
             print("\t\tAccuracy D decider2 real-real: {:.4f} | fake refined2-real {:.4f}".format(total_acc_decider2_rr, total_acc_decider2_fr))
             print("\t{} time: {:.2f} seconds".format(phase.title(), time.time() - phase_start))
 
+        ## Update the threshold of LR-epoch 
+
+        # model.G_lr_scheduler.step()
+        # model.D_lr_scheduler.step()
+        # model.G_refiner_lr_scheduler.step()
+        # model.D_decider_lr_scheduler.step()    
+        # model.G_refiner2_lr_scheduler.step()
+        # model.D_decider2_lr_scheduler.step() 
+
         ## Update lr
         model.update_lr(total_loss_g, total_loss_d, total_loss_g_refiner, total_loss_d_decider, total_loss_g_refiner2, total_loss_d_decider2)
 

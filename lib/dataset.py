@@ -592,11 +592,6 @@ class ImageBatchSampler(Sampler):
                     batch = []
                     continue
             group_index += 1
-            ## Uncomment not to drop lasts
-            # if batch != []:
-            #     sample_indexes.extend(batch)
-            #     n_batches -= 1
-            #     group_index += 1
         return sample_indexes
 
     def __iter__(self):

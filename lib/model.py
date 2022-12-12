@@ -40,7 +40,6 @@ class BaseModel(ABC):
         self.device = config.DEVICE
         self.model_name = config.MODEL_NAME
         self.log_header = config.LOG_HEADER
-        self.LR_change = round((config.N_EPOCHS/100)* 80)
 
         self.batch_size = config.BATCH_SIZE
         gan_loss = config.GAN_LOSS
@@ -121,7 +120,7 @@ class GANModel(BaseModel):
         self.devicesNum = config.N_GPUS
         self.model_name = config.MODEL_NAME
         self.log_header = config.LOG_HEADER
-
+        self.LR_change = round((config.N_EPOCHS/100)* 80)
         self.batch_size = config.BATCH_SIZE
         self.gan_loss1 = config.GAN_LOSS1
         self.gan_loss2 = config.GAN_LOSS2
@@ -281,17 +280,17 @@ class GANModel(BaseModel):
 
             #---------alternative
 
-            # self.G_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_optimizer, step_size= self.LR_change, gamma=0.005)
+            self.G_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_optimizer, step_size= self.LR_change, gamma=0.005)
 
-            # self.D_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_optimizer, step_size= self.LR_change, gamma=0.005)
+            self.D_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_optimizer, step_size= self.LR_change, gamma=0.005)
 
-            # self.G_refiner_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_refiner_optimizer, step_size= self.LR_change, gamma=0.005)
+            self.G_refiner_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_refiner_optimizer, step_size= self.LR_change, gamma=0.005)
 
-            # self.D_decider_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_decider_optimizer, step_size= self.LR_change, gamma=0.005)
+            self.D_decider_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_decider_optimizer, step_size= self.LR_change, gamma=0.005)
 
-            # self.G_refiner2_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_refiner2_optimizer, step_size= self.LR_change, gamma=0.005)
+            self.G_refiner2_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_refiner2_optimizer, step_size= self.LR_change, gamma=0.005)
 
-            # self.D_decider2_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_decider2_optimizer, step_size= self.LR_change, gamma=0.005) 
+            self.D_decider2_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_decider2_optimizer, step_size= self.LR_change, gamma=0.005) 
 
         ## Parallelize over gpus
         if self.device == torch.device("cuda") and self.devicesNum > 1:
@@ -1217,12 +1216,5 @@ class GANModel(BaseModel):
             self.backward_G_refiner2(
                 real_images, refined2, update=False, prob_flip_labels=0.0
             )
-
-        # self.G_lr_scheduler.step()
-        # self.D_lr_scheduler.step()
-        # self.G_refiner_lr_scheduler.step()
-        # self.D_decider_lr_scheduler.step()    
-        # self.G_refiner2_lr_scheduler.step()
-        # self.D_decider2_lr_scheduler.step() 
 
         return fake_images, refined1, refined2
