@@ -40,6 +40,7 @@ class BaseModel(ABC):
         self.device = config.DEVICE
         self.model_name = config.MODEL_NAME
         self.log_header = config.LOG_HEADER
+        self.LR_change = round((config.N_EPOCHS/100)* 80)
 
         self.batch_size = config.BATCH_SIZE
         gan_loss = config.GAN_LOSS
@@ -278,6 +279,20 @@ class GANModel(BaseModel):
                 min_lr=lr_min_val,
             )
 
+            #---------alternative
+
+            # self.G_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_optimizer, step_size= self.LR_change, gamma=0.005)
+
+            # self.D_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_optimizer, step_size= self.LR_change, gamma=0.005)
+
+            # self.G_refiner_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_refiner_optimizer, step_size= self.LR_change, gamma=0.005)
+
+            # self.D_decider_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_decider_optimizer, step_size= self.LR_change, gamma=0.005)
+
+            # self.G_refiner2_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.G_refiner2_optimizer, step_size= self.LR_change, gamma=0.005)
+
+            # self.D_decider2_lr_scheduler = torch.optim.lr_scheduler.StepLR(self.D_decider2_optimizer, step_size= self.LR_change, gamma=0.005) 
+
         ## Parallelize over gpus
         if self.device == torch.device("cuda") and self.devicesNum > 1:
             # if torch.cuda.device_count() > 1:
@@ -398,7 +413,6 @@ class GANModel(BaseModel):
             print("\tBatch size:", self.batch_size)
             print("\tGAN loss1:", self.gan_loss1)
             print("\tGAN loss2:", self.gan_loss2)
-            # print("\tLearning rates (G, D): {:.4f}, {:.4f}".format(G_lr, D_lr))
             print(
                 "\tLearning rates (G, D, G_refiner, D_decider, G_refiner2, D_decider2): \
 {:.2E}, {:.2E}, {:.2E}, {:.2E}, {:.2E}, {:.2E}".format(
@@ -451,7 +465,6 @@ class GANModel(BaseModel):
             self.G_refiner = torch.nn.DataParallel(self.G_refiner)
             self.G_refiner2 = torch.nn.DataParallel(self.G_refiner2)
             state = torch.load(model_file, map_location=lambda storage, loc: storage)
-            # state = torch.load(model_file, map_location=self.device)
         else:
             state = torch.load(model_file)
 
@@ -672,12 +685,6 @@ class GANModel(BaseModel):
         if update:
             loss_D_fr.backward()
 
-        ## Real-fake
-        # pred_rf = self.D(real_first_images, fake_wvs)
-        # loss_D_rf, self.accuracy_D_rf = self.D_criterionGAN(pred_rf, target_is_real=False, prob_flip_labels=prob_flip_labels)
-        # if update:
-        #     loss_D_rf.backward()
-
         if self.gan_loss1 == "wgangp":
             self.loss_gp_fr, _, _ = get_paired_gradient_penalty(
                 self.D,
@@ -688,13 +695,9 @@ class GANModel(BaseModel):
                 constant=1.0,
                 lambda_gp=10.0,
             )
-            # self.loss_gp_fr, _ = get_single_gradient_penalty(self.D, real_first_images, fake_images, self.device,
-            #                                        type='mixed', constant=1.0, lambda_gp=10.0)
-            # self.loss_gp_rf, _, _ = get_paired_gradient_penalty(self.D, (real_first_images, real_wvs), (real_first_images, fake_wvs), self.device,
-            #                                        type='mixed', constant=1.0, lambda_gp=10.0)
+
             if update:
                 self.loss_gp_fr.backward(retain_graph=True)
-                # self.loss_gp_rf.backward(retain_graph=True)
 
             self.loss_D = loss_D_rr + loss_D_fr + self.loss_gp_fr
         else:
@@ -1099,8 +1102,6 @@ class GANModel(BaseModel):
 
             ## Update D
             self.D = self.set_requires_grad(self.D, train_D)
-            # all_true = np.all([param.requires_grad for param in self.D.parameters()])
-            # print("All D parameters have grad:", str(all_true))
             self.D_optimizer.zero_grad()
             self.backward_D(
                 real_first_images,
@@ -1111,7 +1112,6 @@ class GANModel(BaseModel):
                 prob_flip_labels=self.prob_flip_labels,
             )
             if train_D:
-                print("D step")
                 self.D_optimizer.step()
 
             ## Update G
@@ -1126,10 +1126,8 @@ class GANModel(BaseModel):
                 prob_flip_labels=self.prob_flip_labels,
             )
             if train_G:
-                print("G step")
                 self.G_optimizer.step()
             #                self.G_optimizer.zero_grad()
-            ## -------------------------------------
 
             ## Update D_decider
             self.D_decider = self.set_requires_grad(self.D_decider, train_D)
@@ -1142,7 +1140,6 @@ class GANModel(BaseModel):
                 prob_flip_labels=self.prob_flip_labels,
             )
             if train_D:
-                print("D dec step")
                 self.D_decider_optimizer.step()
             #                self.D_decider.zero_grad()
             #                self.D_decider_optimizer.zero_grad()
@@ -1151,7 +1148,7 @@ class GANModel(BaseModel):
             self.D_decider.zero_grad()
             self.D_decider = self.set_requires_grad(
                 self.D_decider, False
-            )  # Disable backprop for D
+            ) 
             self.G_refiner = self.set_requires_grad(self.G_refiner, train_G)
             self.G_refiner_optimizer.zero_grad()
             #            self.D_decider.zero_grad()
@@ -1162,10 +1159,7 @@ class GANModel(BaseModel):
                 prob_flip_labels=self.prob_flip_labels,
             )
             if train_G:
-                print("G ref step")
                 self.G_refiner_optimizer.step()
-
-            ## -------------------------------------
 
             ## Update D_decider2
             self.D_decider2 = self.set_requires_grad(self.D_decider2, train_D)
@@ -1177,13 +1171,12 @@ class GANModel(BaseModel):
                 prob_flip_labels=self.prob_flip_labels,
             )
             if train_D:
-                print("D dec 2 step")
                 self.D_decider2_optimizer.step()
 
             ## Update G_refiner2
             self.D_decider2 = self.set_requires_grad(
                 self.D_decider2, False
-            )  # Disable backprop for D
+            ) 
             self.G_refiner2 = self.set_requires_grad(self.G_refiner2, train_G)
             self.G_refiner2_optimizer.zero_grad()
             # print ("D ref 2 step pre")
@@ -1194,7 +1187,6 @@ class GANModel(BaseModel):
                 prob_flip_labels=self.prob_flip_labels,
             )
             if train_G:
-                print("G ref 2 step")
                 self.G_refiner2_optimizer.step()
 
         else:
@@ -1225,5 +1217,12 @@ class GANModel(BaseModel):
             self.backward_G_refiner2(
                 real_images, refined2, update=False, prob_flip_labels=0.0
             )
+
+        # self.G_lr_scheduler.step()
+        # self.D_lr_scheduler.step()
+        # self.G_refiner_lr_scheduler.step()
+        # self.D_decider_lr_scheduler.step()    
+        # self.G_refiner2_lr_scheduler.step()
+        # self.D_decider2_lr_scheduler.step() 
 
         return fake_images, refined1, refined2

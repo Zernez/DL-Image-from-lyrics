@@ -33,24 +33,10 @@ G_refiner2_loss,D_decider2_loss,D_rr_acc,D_rf_acc,D_fr_acc,D_decider_rr_acc,D_de
         self.NORMALIZE = True
         self.MEAN = [0.5, 0.5, 0.5]
         self.STD = [0.5, 0.5, 0.5]
-        # self.MEAN = [0.5505, 0.3927, 0.4473]
-        # self.STD = [0.2245, 0.2782, 0.3102]
-        # self.MEAN = [0.485, 0.456, 0.406]
-        # self.STD = [0.229, 0.224, 0.225]
-
-        ## Batch sampler
-        # self.SHUFFLE_GROUPS = True
-        # self.GROUP_N_LABELS_RANGES = [-1, 5, 1000]
-        # self.GROUP_N_LABELS_RANGES = [0, 10000]
-        # self.GROUP_WIDTH_RANGES = [-1, 500, 100000]
-        # self.GROUP_WIDTH_RANGES = [-1, 100000]
-        # self.GROUP_HEIGHT_RANGES = [-1, 590, 100000]
-        # self.GROUP_HEIGHT_RANGES = [-1, 100000]
-        # self.GROUP_HEIGHT_RANGES = [-1, 100000]
 
         ## Augmentation options
         self.RANDOM_BLURRINESS = True
-        self.HORIZONTAL_FLIPPING = False     ## BAD!
+        self.HORIZONTAL_FLIPPING = False    
         self.RANDOM_ROTATION = False
         self.COLOR_JITTERING = True
         self.RANDOM_CHANNEL_SWAPPING = False
@@ -110,15 +96,9 @@ G_refiner2_loss,D_decider2_loss,D_rr_acc,D_rf_acc,D_fr_acc,D_decider_rr_acc,D_de
         print ("GPUs available: ", torch.cuda.device_count())
         self.DEVICE = torch.device('cpu')
         self.N_WORKERS = 8
-#        self.N_GPUS = 2
         self.N_GPUS= 1
 
-        ## Logging
-        # self.N_PRINT_BATCH = 50
-        # self.N_LOG_BATCH = 100
-        # self.N_SAVE_VISUALS_BATCH = 100
-        # self.N_SAVE_MODEL_EPOCHS = 20
-        # self.N_GRID_ROW = 8
+
         self.N_PRINT_BATCH = 50
         self.N_LOG_BATCH = 50
         self.N_SAVE_VISUALS_BATCH = 50
