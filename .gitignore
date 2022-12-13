@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 .vscode
 
 *.bak
@@ -11,5 +10,3 @@ data/wikiart/images
 
 .ipynb_checkpoints/
 .DS_Store
-=======
->>>>>>> master
