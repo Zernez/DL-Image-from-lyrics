@@ -1,2 +1,3 @@
-# DL-Image-from-lyrics
-Creation of images from lyrics
+# Deep Learing course, final project
+## Creation of images from lyrics through AI
+
